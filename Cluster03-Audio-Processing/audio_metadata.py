@@ -1,32 +1,15 @@
-import json
+"""Standalone audio metadata command; implementation shared with main.py."""
+
 import sys
-import wave
 from pathlib import Path
 
-
-def extract_metadata(file_name):
-    path = Path(file_name)
-
-    with wave.open(str(path), "rb") as audio:
-        channels = audio.getnchannels()
-        sample_width = audio.getsampwidth()
-        sample_rate = audio.getframerate()
-        frames = audio.getnframes()
-
-    return {
-        "file_name": path.name,
-        "file_size": path.stat().st_size,
-        "channels": channels,
-        "sample_width_bits": sample_width * 8,
-        "sample_rate": sample_rate,
-        "frames": frames,
-        "duration_seconds": round(frames / sample_rate, 3),
-        "bit_rate": channels * sample_width * 8 * sample_rate,
-    }
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+try:
+    from multimedia.cli import metadata_cli
+    from multimedia.metadata import audio_metadata as extract_metadata
+except ImportError as exc:
+    raise SystemExit(f"Missing Python dependency: {exc}. Run: python -m pip install -r requirements.txt")
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        raise SystemExit("Usage: python audio_metadata.py <wav_file>")
-
-    print(json.dumps(extract_metadata(sys.argv[1]), indent=2))
+    raise SystemExit(metadata_cli(extract_metadata, "audio metadata", standalone=True))
