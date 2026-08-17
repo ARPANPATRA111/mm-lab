@@ -1,29 +1,15 @@
-import json
-import subprocess
+"""Standalone video metadata command; implementation shared with main.py."""
+
 import sys
 from pathlib import Path
 
-
-def extract_metadata(file_name):
-    path = Path(file_name)
-    command = [
-        "ffprobe",
-        "-v", "error",
-        "-show_format",
-        "-show_streams",
-        "-of", "json",
-        str(path),
-    ]
-
-    result = subprocess.run(command, capture_output=True, text=True, check=True)
-    metadata = json.loads(result.stdout)
-    metadata["file_name"] = path.name
-    metadata["file_size"] = path.stat().st_size
-    return metadata
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+try:
+    from multimedia.cli import metadata_cli
+    from multimedia.metadata import video_metadata as extract_metadata
+except ImportError as exc:
+    raise SystemExit(f"Missing Python dependency: {exc}. Run: python -m pip install -r requirements.txt")
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        raise SystemExit("Usage: python video_metadata.py <video_file>")
-
-    print(json.dumps(extract_metadata(sys.argv[1]), indent=2))
+    raise SystemExit(metadata_cli(extract_metadata, "video metadata", standalone=True))
