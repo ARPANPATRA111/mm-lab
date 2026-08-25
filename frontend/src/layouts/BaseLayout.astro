@@ -1,0 +1,34 @@
+---
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Multimedia Laboratory",
+  description = "Private, browser-based image, audio, and video metadata experiments built with Astro.",
+} = Astro.props;
+const pageTitle = title === "Multimedia Laboratory" ? title : `${title} · Multimedia Laboratory`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0b0d12" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <Header />
+    <main id="main-content"><slot /></main>
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,23 @@
+---
+import type { Experiment } from "../data/experiments";
+interface Props { experiment: Experiment; compact?: boolean }
+const { experiment, compact = false } = Astro.props;
+const icon = experiment.id.startsWith("image") ? "image" : experiment.id.startsWith("audio") ? "audio" : "video";
+---
+
+<article class:list={["experiment-card", `accent-${experiment.accent}`, { compact }]}>
+  <div class="card-topline"><span>{experiment.number}</span><span>{experiment.eyebrow}</span></div>
+  <div class:list={["media-icon", `media-icon--${icon}`]} aria-hidden="true">
+    {icon === "image" && <><span class="sun"></span><span class="mountain one"></span><span class="mountain two"></span></>}
+    {icon === "audio" && <div class="wave">{[1,2,3,4,5,6,7,8,9].map((n) => <i style={`--h:${12 + (n % 5) * 10}px;--o:${0.45 + (n % 3) * 0.2}`}></i>)}</div>}
+    {icon === "video" && <><span class="play"></span><span class="frame-dot dot-a"></span><span class="frame-dot dot-b"></span></>}
+  </div>
+  <div class="card-copy">
+    <h3>{experiment.title}</h3>
+    <p>{experiment.summary}</p>
+  </div>
+  <div class="tag-row">{experiment.concepts.map((concept) => <span>{concept}</span>)}</div>
+  <a class="card-link" href={experiment.href} aria-label={`Open ${experiment.title} experiment`}>
+    Open experiment <span aria-hidden="true">↗</span>
+  </a>
+</article>

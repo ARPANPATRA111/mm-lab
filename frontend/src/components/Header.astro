@@ -1,0 +1,25 @@
+---
+const path = Astro.url.pathname;
+const links = [
+  { href: "/", label: "Overview" },
+  { href: "/experiments", label: "Experiments" },
+  { href: "/about", label: "About" },
+];
+---
+
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="/" aria-label="Multimedia Laboratory home">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span><strong>MM</strong><small>Laboratory</small></span>
+    </a>
+    <nav aria-label="Primary navigation">
+      {links.map((link) => (
+        <a href={link.href} aria-current={path === link.href || (link.href !== "/" && path.startsWith(`${link.href}/`)) ? "page" : undefined}>
+          {link.label}
+        </a>
+      ))}
+    </nav>
+    <span class="local-pill"><span aria-hidden="true"></span>Local processing</span>
+  </div>
+</header>

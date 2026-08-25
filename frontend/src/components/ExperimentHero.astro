@@ -1,0 +1,25 @@
+---
+import type { Experiment } from "../data/experiments";
+interface Props { experiment: Experiment; intro: string }
+const { experiment, intro } = Astro.props;
+---
+
+<section class:list={["experiment-hero", `experiment-hero--${experiment.accent}`]}>
+  <div class="shell">
+    <a class="back-link" href="/experiments">← All experiments</a>
+    <div class="experiment-title-row">
+      <div>
+        <span class="hero-index">Experiment {experiment.number}</span>
+        <h1>{experiment.title}</h1>
+        <p>{intro}</p>
+      </div>
+      <div class="hero-orbit" aria-hidden="true"><span></span><i></i><b></b></div>
+    </div>
+    <div class="experiment-facts">
+      <span><small>Runs</small>In your browser</span>
+      <span><small>File transfer</small>None</span>
+      <span><small>Focus</small>{experiment.concepts.join(" · ")}</span>
+      <a href="#how-it-works">How it works ↓</a>
+    </div>
+  </div>
+</section>

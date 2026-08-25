@@ -1,0 +1,37 @@
+---
+interface Props {
+  aim: string;
+  input: string;
+  concept: string;
+  processing: string;
+  output: string;
+  dependency: string;
+  dependencyNote: string;
+  limitations: string[];
+}
+const { aim, input, concept, processing, output, dependency, dependencyNote, limitations } = Astro.props;
+const rows = [
+  ["Aim", aim], ["Input", input], ["Concept", concept], ["Processing", processing], ["Output", output],
+];
+---
+
+<section class="lab-record section-pad" id="how-it-works">
+  <div class="section-heading">
+    <div><span class="mono-label">Lab record</span><h2>How it works</h2></div>
+    <p>A transparent view of the input, the parser, and what the result means.</p>
+  </div>
+  <div class="record-grid">
+    <div class="record-rows">
+      {rows.map(([label, value], index) => <article><span>{String(index + 1).padStart(2, "0")}</span><div><h3>{label}</h3><p>{value}</p></div></article>)}
+    </div>
+    <aside class="dependency-card">
+      <span class="mono-label">Dependency</span>
+      <h3>{dependency}</h3>
+      <p>{dependencyNote}</p>
+      <div class="dependency-route"><span>File</span><i>→</i><span>Parser</span><i>→</i><span>UI</span></div>
+      <h4>Known limitations</h4>
+      <ul>{limitations.map((item) => <li>{item}</li>)}</ul>
+    </aside>
+  </div>
+  <slot />
+</section>

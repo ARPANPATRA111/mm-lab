@@ -1,0 +1,36 @@
+---
+interface Props { title: string; code: string; filename: string }
+const { title, code, filename } = Astro.props;
+const id = `code-${filename.replace(/[^a-z0-9]/gi, "-").toLowerCase()}`;
+---
+
+<div class="implementation-action">
+  <button class="button button--outline" type="button" data-open-code={id}>View implementation <span aria-hidden="true">⌘</span></button>
+</div>
+<dialog class="code-dialog" id={id} aria-labelledby={`${id}-title`}>
+  <div class="dialog-head">
+    <div><span class="mono-label">Source / TypeScript</span><h2 id={`${id}-title`}>{title}</h2><code>{filename}</code></div>
+    <button class="icon-button" type="button" data-close-code aria-label="Close implementation viewer">×</button>
+  </div>
+  <div class="code-toolbar"><span>Actual source used by this experiment</span><button type="button" data-copy-code>Copy code</button></div>
+  <pre><code>{code}</code></pre>
+</dialog>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>("[data-open-code]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const dialog = document.getElementById(button.dataset.openCode ?? "");
+      if (dialog instanceof HTMLDialogElement) dialog.showModal();
+    });
+  });
+  document.querySelectorAll<HTMLDialogElement>(".code-dialog").forEach((dialog) => {
+    dialog.querySelector<HTMLButtonElement>("[data-close-code]")?.addEventListener("click", () => dialog.close());
+    dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); });
+    dialog.querySelector<HTMLButtonElement>("[data-copy-code]")?.addEventListener("click", async (event) => {
+      const button = event.currentTarget as HTMLButtonElement;
+      await navigator.clipboard.writeText(dialog.querySelector("pre code")?.textContent ?? "");
+      button.textContent = "Copied";
+      window.setTimeout(() => (button.textContent = "Copy code"), 1400);
+    });
+  });
+</script>

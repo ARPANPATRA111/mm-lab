@@ -1,0 +1,42 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ExperimentHero from "../../components/ExperimentHero.astro";
+import FileWorkspace from "../../components/FileWorkspace.astro";
+import LabRecord from "../../components/LabRecord.astro";
+import CodeViewer from "../../components/CodeViewer.astro";
+import { getExperiment } from "../../data/experiments";
+import source from "../../features/image-metadata/extractImageMetadata.ts?raw";
+const experiment = getExperiment("image-metadata");
+---
+
+<BaseLayout title="Image Metadata" description="Inspect image dimensions, EXIF, camera, GPS, and color metadata locally in your browser.">
+  <ExperimentHero experiment={experiment} intro="Open the technical record hidden alongside an image's pixels—from dimensions and color space to the camera that captured it." />
+  <div class="shell workspace-wrap">
+    <FileWorkspace kind="image" accept="image/*,.tif,.tiff,.heic,.avif" prompt="Drop an image on the inspection bench" formats="JPEG · PNG · WebP · TIFF · HEIC · AVIF — support varies by embedded structure">
+      <figure slot="preview" class="media-preview image-preview"><img data-image-preview alt="" /><figcaption>Local image preview</figcaption></figure>
+    </FileWorkspace>
+  </div>
+  <LabRecord
+    aim="To inspect technical and embedded metadata stored in a digital image file."
+    input="A JPEG, PNG, WebP, TIFF, HEIC, AVIF, or another ExifReader-supported image."
+    concept="Image pixels are accompanied by file-level properties and optional EXIF, IPTC, XMP, ICC, and GPS records."
+    processing="The browser File API supplies the bytes. ExifReader decodes embedded records while createImageBitmap reports display dimensions where the browser supports the format."
+    output="Readable groups for file, image, camera, exposure, dates, authorship, location, embedded record counts, and raw parser output."
+    dependency="ExifReader 4"
+    dependencyNote="A browser-compatible parser for EXIF, IPTC, XMP, ICC, PNG, and related image metadata. It runs locally and avoids reinventing complex binary formats."
+    limitations={[
+      "A format may be parseable even when the browser cannot preview it.",
+      "Many exported or social-media images contain little or no embedded metadata.",
+      "Maker-specific camera fields vary and remain easiest to inspect in raw JSON.",
+    ]}
+  >
+    <CodeViewer title="Image metadata extraction" filename="extractImageMetadata.ts" code={source} />
+  </LabRecord>
+  <section class="concept-section section-pad"><div class="shell"><div class="section-heading"><div><span class="mono-label">Concept cards</span><h2>Read the image record</h2></div></div><div class="concept-grid">
+    <article><span>EXIF</span><h3>Capture conditions</h3><p>Camera-generated fields can describe lens, exposure, ISO, orientation, and the original capture time.</p></article>
+    <article><span>ICC</span><h3>Color interpretation</h3><p>A color profile tells compatible software how numeric pixel values should appear on a display or in print.</p></article>
+    <article><span>GPS</span><h3>Sensitive location</h3><p>Latitude and longitude can make an image geographically identifiable, so detected coordinates receive a warning.</p></article>
+  </div></div></section>
+</BaseLayout>
+
+<script src="../../features/image-metadata/imageMetadata.client.ts"></script>

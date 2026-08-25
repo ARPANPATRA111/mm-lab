@@ -1,0 +1,14 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="About" description="Architecture, privacy, and learning goals of the Multimedia Laboratory.">
+  <section class="directory-hero about-hero"><div class="shell"><span class="eyebrow"><i></i>Project notes</span><h1>Small tools for<br /><em>careful observation.</em></h1><p>This laboratory turns the normally invisible structure of media files into something students can inspect, question, and explain.</p></div></section>
+  <section class="about-content section-pad"><div class="shell about-grid">
+    <article><span class="mono-label">01 / Purpose</span><h2>Learn with real files</h2><p>Metadata is more memorable when it comes from a file you can see or play. The interface places the preview, interpreted values, raw parser output, and source code in one study path.</p></article>
+    <article><span class="mono-label">02 / Architecture</span><h2>Astro outside, TypeScript inside</h2><p>Astro builds the navigation and educational pages as static HTML. Small client modules activate only the upload workspace on each experiment. There is no SPA and no application backend.</p></article>
+    <article><span class="mono-label">03 / Privacy</span><h2>The file stays with you</h2><p>File objects, blob URLs, metadata parsers, and MediaInfo's WebAssembly module all run in the browser. The deployed site receives no selected media.</p></article>
+    <article><span class="mono-label">04 / Transparency</span><h2>No mystery parser claims</h2><p>ExifReader, music-metadata, and MediaInfo.js do the specialized binary parsing. Each experiment identifies its dependency, explains its role, and displays the actual integration code.</p></article>
+  </div></section>
+  <section class="architecture-band"><div class="shell"><span class="mono-label">Request path</span><div class="architecture-flow"><span>Static Astro page<small>Build time</small></span><i>→</i><span>Browser File API<small>User action</small></span><i>→</i><span>Page parser<small>Lazy/local</small></span><i>→</i><span>Readable results<small>DOM update</small></span></div></div></section>
+</BaseLayout>

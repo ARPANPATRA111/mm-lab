@@ -1,0 +1,42 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ExperimentHero from "../../components/ExperimentHero.astro";
+import FileWorkspace from "../../components/FileWorkspace.astro";
+import LabRecord from "../../components/LabRecord.astro";
+import CodeViewer from "../../components/CodeViewer.astro";
+import { getExperiment } from "../../data/experiments";
+import source from "../../features/video-metadata/extractVideoMetadata.ts?raw";
+const experiment = getExperiment("video-metadata");
+---
+
+<BaseLayout title="Video Metadata" description="Inspect video containers, codecs, streams, resolution, and timing locally with MediaInfo WebAssembly.">
+  <ExperimentHero experiment={experiment} intro="Look beyond the moving image and map the container: video, audio, subtitle streams, codecs, timing, resolution, and encoding details." />
+  <div class="shell workspace-wrap">
+    <FileWorkspace kind="video" accept="video/*,.mkv,.avi,.ts" prompt="Drop a video file on the inspection bench" formats="MP4 · WebM · MOV · MKV · AVI · MPEG · TS">
+      <figure slot="preview" class="media-preview video-preview"><video data-video-preview controls preload="metadata"></video><figcaption>Local video preview · playback depends on browser codec support</figcaption></figure>
+    </FileWorkspace>
+  </div>
+  <LabRecord
+    aim="To inspect the container and individual media streams stored in a digital video file."
+    input="An MP4, WebM, MOV, MKV, AVI, MPEG, TS, or another MediaInfo-supported video container."
+    concept="A video file is usually a container with separate encoded video, audio, subtitle, chapter, and metadata tracks."
+    processing="The page dynamically loads MediaInfo.js and its WebAssembly parser only after selection, then supplies requested byte ranges from the browser File object."
+    output="Container and duration, primary video and audio stream details, a stream count map, encoding tags, and complete raw MediaInfo output."
+    dependency="MediaInfo.js 0.3"
+    dependencyNote="A browser-compatible WebAssembly build of MediaInfoLib. It provides deeper container inspection than the native video element while keeping every byte on-device."
+    limitations={[
+      "A browser may analyze a codec that it cannot decode for preview playback.",
+      "Encrypted, damaged, or uncommon containers may return partial information.",
+      "Large files remain local but MediaInfo may request several chunks while inspecting them.",
+    ]}
+  >
+    <CodeViewer title="Video metadata extraction" filename="extractVideoMetadata.ts" code={source} />
+  </LabRecord>
+  <section class="concept-section section-pad"><div class="shell"><div class="section-heading"><div><span class="mono-label">Concept cards</span><h2>Read the video record</h2></div></div><div class="concept-grid">
+    <article><span>Box</span><h3>Container</h3><p>MP4, WebM, and MKV organize one or more streams plus timing and descriptive data; they are not themselves video codecs.</p></article>
+    <article><span>FPS</span><h3>Frame rate</h3><p>Frames per second describes temporal sampling. Variable-frame-rate files can report nominal and minimum or maximum values.</p></article>
+    <article><span>A/V</span><h3>Independent streams</h3><p>Video and audio are commonly encoded with different codecs, then synchronized and carried by one container.</p></article>
+  </div></div></section>
+</BaseLayout>
+
+<script src="../../features/video-metadata/videoMetadata.client.ts"></script>

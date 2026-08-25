@@ -1,0 +1,42 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ExperimentHero from "../../components/ExperimentHero.astro";
+import FileWorkspace from "../../components/FileWorkspace.astro";
+import LabRecord from "../../components/LabRecord.astro";
+import CodeViewer from "../../components/CodeViewer.astro";
+import { getExperiment } from "../../data/experiments";
+import source from "../../features/audio-metadata/extractAudioMetadata.ts?raw";
+const experiment = getExperiment("audio-metadata");
+---
+
+<BaseLayout title="Audio Metadata" description="Inspect audio codec, sample rate, bitrate, tags, and artwork locally in your browser.">
+  <ExperimentHero experiment={experiment} intro="Separate how a recording sounds from how it is stored: inspect its encoding, signal properties, descriptive tags, and artwork." />
+  <div class="shell workspace-wrap">
+    <FileWorkspace kind="audio" accept="audio/*,.flac,.m4a,.aiff,.aif" prompt="Drop an audio file on the inspection bench" formats="MP3 · WAV · FLAC · M4A · AAC · Ogg · Opus · AIFF">
+      <div slot="preview" class="media-preview audio-preview"><img data-artwork hidden alt="" /><div><span class="mono-label">Local playback</span><audio data-audio-preview controls preload="metadata"></audio></div></div>
+    </FileWorkspace>
+  </div>
+  <LabRecord
+    aim="To inspect the technical properties and descriptive tags stored in a digital audio file."
+    input="An MP3, WAV, FLAC, M4A, AAC, Ogg, Opus, AIFF, or another music-metadata-supported audio file."
+    concept="A container holds encoded sample data and may also carry tags such as title, artist, album, track number, and embedded artwork."
+    processing="music-metadata reads the browser Blob directly and returns normalized common tags, technical format values, and native tag families."
+    output="File properties, codec and container, duration, bitrate, sample rate, channels, bit depth, descriptive tags, artwork, and raw metadata."
+    dependency="music-metadata 11"
+    dependencyNote="The maintained package parses many audio containers and tag standards in the browser through parseBlob. The native audio element handles playback separately."
+    limitations={[
+      "Browser playback support and parser support are separate; a parsed file may not play.",
+      "Bitrate can be absent or estimated depending on the container and stream.",
+      "Malformed or unusually large embedded artwork can increase analysis cost.",
+    ]}
+  >
+    <CodeViewer title="Audio metadata extraction" filename="extractAudioMetadata.ts" code={source} />
+  </LabRecord>
+  <section class="concept-section section-pad"><div class="shell"><div class="section-heading"><div><span class="mono-label">Concept cards</span><h2>Read the audio record</h2></div></div><div class="concept-grid">
+    <article><span>Hz</span><h3>Sample rate</h3><p>The number of audio samples captured per second. A 48 kHz stream represents 48,000 samples per channel each second.</p></article>
+    <article><span>bps</span><h3>Bitrate</h3><p>The approximate data used per second. It describes storage rate—not automatically perceptual quality.</p></article>
+    <article><span>ID3</span><h3>Descriptive tags</h3><p>Tag systems attach identity and context such as title, artist, album, year, genre, and artwork.</p></article>
+  </div></div></section>
+</BaseLayout>
+
+<script src="../../features/audio-metadata/audioMetadata.client.ts"></script>

@@ -1,0 +1,26 @@
+{
+  "name": "multimedia-laboratory-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "check": "astro check",
+    "test": "vitest run",
+    "test:e2e": "node scripts/smoke.mjs",
+    "build": "astro check && astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^7.2.6",
+    "exifreader": "^4.44.0",
+    "mediainfo.js": "^0.3.7",
+    "music-metadata": "^11.15.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "playwright-core": "^1.55.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.11"
+  }
+}

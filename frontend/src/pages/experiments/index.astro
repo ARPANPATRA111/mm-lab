@@ -1,0 +1,26 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ExperimentCard from "../../components/ExperimentCard.astro";
+import { experiments } from "../../data/experiments";
+---
+
+<BaseLayout title="Experiments" description="Browse the image, audio, and video metadata experiments.">
+  <section class="directory-hero">
+    <div class="shell">
+      <span class="eyebrow"><i></i>Module 01 / Metadata</span>
+      <h1>Experiment directory</h1>
+      <p>Choose a medium, bring your own file, and inspect its technical structure entirely in your browser.</p>
+    </div>
+  </section>
+  <section class="directory-content section-pad">
+    <div class="shell">
+      <div class="directory-top"><span>Available now</span><span>3 experiments</span></div>
+      <div class="experiment-grid">{experiments.map((experiment) => <ExperimentCard experiment={experiment} />)}</div>
+      <div class="future-experiments">
+        <span class="mono-label">Future experiments</span>
+        <h2>A foundation, not a dead end.</h2>
+        <div class="future-tags">{["Image filtering", "Color transforms", "Audio waveforms", "Compression", "Frequency domain", "Computer vision"].map((tag) => <span>{tag}<small>Planned</small></span>)}</div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

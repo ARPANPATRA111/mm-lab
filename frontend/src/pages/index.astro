@@ -1,0 +1,61 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ExperimentCard from "../components/ExperimentCard.astro";
+import { experiments } from "../data/experiments";
+---
+
+<BaseLayout>
+  <section class="home-hero">
+    <div class="hero-grid-lines" aria-hidden="true"></div>
+    <div class="shell home-hero-inner">
+      <div class="hero-copy">
+        <span class="eyebrow"><i></i>Interactive course workspace</span>
+        <h1>See what lives<br /><em>inside the file.</em></h1>
+        <p>Explore the hidden structure of digital images, audio, and video through hands-on metadata experiments—without sending your media anywhere.</p>
+        <div class="hero-actions">
+          <a class="button button--primary" href="/experiments">Enter the laboratory <span>↗</span></a>
+          <a class="button button--ghost" href="#experiments">Explore experiments ↓</a>
+        </div>
+        <div class="trust-row"><span><i>✓</i> Browser-based</span><span><i>✓</i> Zero uploads</span><span><i>✓</i> Open source code</span></div>
+      </div>
+      <div class="hero-instrument" aria-label="Abstract visualization of image, audio, and video data">
+        <div class="instrument-head"><span>LIVE / FILE ANATOMY</span><span><i></i><i></i><i></i></span></div>
+        <div class="instrument-screen">
+          <div class="screen-rings"><span></span><i></i><b></b></div>
+          <div class="scan-line"></div>
+          <div class="data-label label-a"><small>CONTAINER</small><b>MP4</b></div>
+          <div class="data-label label-b"><small>SAMPLE RATE</small><b>48 kHz</b></div>
+          <div class="data-label label-c"><small>COLOR SPACE</small><b>sRGB</b></div>
+          <div class="signal-wave">{Array.from({ length: 28 }, (_, i) => <i style={`--h:${5 + (i % 7) * 4}px`}></i>)}</div>
+        </div>
+        <div class="instrument-foot"><span><i></i> LOCAL MODE</span><span>3 PARSERS READY</span></div>
+      </div>
+    </div>
+    <div class="hero-marquee" aria-hidden="true"><span>EXIF</span><i></i><span>ID3</span><i></i><span>CODECS</span><i></i><span>STREAMS</span><i></i><span>CONTAINERS</span><i></i><span>COLOR PROFILES</span></div>
+  </section>
+
+  <section class="experiments-section section-pad" id="experiments">
+    <div class="shell">
+      <div class="section-heading">
+        <div><span class="mono-label">Current module / Metadata</span><h2>Three files. Three stories.</h2></div>
+        <p>Every media file carries a technical record. Choose an experiment and learn how to read it.</p>
+      </div>
+      <div class="experiment-grid">{experiments.map((experiment) => <ExperimentCard experiment={experiment} />)}</div>
+    </div>
+  </section>
+
+  <section class="learning-strip section-pad">
+    <div class="shell learning-grid">
+      <div><span class="mono-label">The learning loop</span><h2>Inspect. Connect.<br />Understand.</h2><p>Each experiment pairs a real browser tool with the concepts you need to explain the result in a laboratory evaluation.</p></div>
+      <ol>
+        <li><span>01</span><div><strong>Supply a local file</strong><p>The browser creates a temporary File object. No network transfer is required.</p></div></li>
+        <li><span>02</span><div><strong>Parse its structure</strong><p>A specialized, page-specific parser reads headers, tags, and streams.</p></div></li>
+        <li><span>03</span><div><strong>Study the evidence</strong><p>Readable groups, raw JSON, concepts, and real TypeScript connect theory to implementation.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="future-band">
+    <div class="shell future-inner"><div><span class="mono-label">Built to grow</span><h2>This is only the first module.</h2></div><p>The same Astro structure can add filtering, waveforms, transforms, compression, computer vision, and future lab work without rebuilding the shell.</p><span class="future-count">01—08 <small>clusters</small></span></div>
+  </section>
+</BaseLayout>

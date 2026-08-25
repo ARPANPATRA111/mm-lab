@@ -1,0 +1,44 @@
+---
+import PrivacyNotice from "./PrivacyNotice.astro";
+
+interface Props {
+  kind: "image" | "audio" | "video";
+  accept: string;
+  prompt: string;
+  formats: string;
+}
+const { kind, accept, prompt, formats } = Astro.props;
+---
+
+<section class="workspace" data-workspace={kind} aria-labelledby="workspace-title">
+  <div class="workspace-toolbar">
+    <div><span class="step-number">01</span><h2 id="workspace-title">Choose a file</h2></div>
+    <button class="text-button" data-reset hidden type="button">Reset experiment</button>
+  </div>
+  <label class="dropzone" data-dropzone>
+    <input data-file-input type="file" accept={accept} />
+    <span class="upload-glyph" aria-hidden="true"><i>↑</i></span>
+    <strong>{prompt}</strong>
+    <span>or <u>browse your device</u></span>
+    <small>{formats}</small>
+  </label>
+  <PrivacyNotice />
+  <div class="workspace-status" data-status data-state="idle" role="status" aria-live="polite">Ready for a local file</div>
+
+  <div class="workspace-empty" data-empty>
+    <div class="empty-visual" aria-hidden="true"><span></span><i></i><i></i><i></i></div>
+    <h3>The inspection bench is ready</h3>
+    <p>Select a supported file to reveal its structure. Results and a local preview will appear here.</p>
+  </div>
+
+  <div class="workspace-output" data-output hidden>
+    <div class="preview-panel"><slot name="preview" /></div>
+    <div data-notices class="notice-stack"></div>
+    <div data-sections class="results-stack"></div>
+    <details class="raw-panel">
+      <summary><span>Raw metadata</span><small>Developer view</small></summary>
+      <div class="raw-toolbar"><p>Normalized JSON returned by the parser.</p><button data-copy-raw type="button">Copy JSON</button></div>
+      <pre data-raw tabindex="0"></pre>
+    </details>
+  </div>
+</section>
