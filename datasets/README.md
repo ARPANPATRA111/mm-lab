@@ -1,4 +1,4 @@
-# Multimedia Test Dataset
+# Multimedia Sample Dataset
 
 This directory contains a compact but varied dataset for the metadata experiments and the Python cluster scripts. It has 25 primary media files and is approximately 10 MiB.
 
@@ -35,7 +35,7 @@ The HEIC file is useful for testing parser-versus-decoder limitations. The curre
 | `tagged_vorbis.ogg` | Vorbis | Stereo, 48 kHz, descriptive stream tags |
 | `tagged_aac.m4a` | AAC in MP4 | Stereo, 48 kHz, 192 kbps, title/artist/album/genre tags |
 
-The WAV files work with `Cluster03-Audio-Processing/audio_metadata.py`. The other formats exercise the broader browser implementation.
+All seven audio files work with `Cluster03-Audio-Processing/audio_metadata.py` and the consolidated `main.py`. Compressed formats require FFprobe. The processing exercise accepts the 16-bit WAV sample; convert the stereo 24-bit sample to a separate 16-bit WAV to demonstrate stereo-to-mono (see the root README).
 
 ## Video
 
@@ -58,13 +58,7 @@ python Cluster03-Audio-Processing/audio_metadata.py datasets/audio/stereo_48k_24
 python Cluster04-Video-Processing/video_metadata.py datasets/video/multistream_h264.mkv
 ```
 
-Image extraction requires Pillow. Video extraction requires `ffprobe` from FFmpeg. WAV extraction uses only Python's standard library.
+Image extraction requires Pillow. Video and compressed-audio extraction require `ffprobe` from FFmpeg. PCM WAV extraction uses Python's standard-library `wave` module, with optional tags from FFprobe. Install the shared Python dependencies from the root `requirements.txt`.
 
-## Verification performed
-
-- The image Python script passed on all 11 JPEG/TIFF files it supports.
-- The audio Python script passed on all 3 WAV variations.
-- The video Python script passed on all 6 video containers.
-- The deployed Astro frontend successfully processed all 25 primary media files.
-- The frontend displayed its location privacy warning for `gps_dscn0010.jpg`.
-- `sample_iphone.heic` correctly demonstrates the documented Pillow decoder limitation.
+See the [project README](../README.md) for the consolidated analyzer, processing
+commands and supported-format limitations.
