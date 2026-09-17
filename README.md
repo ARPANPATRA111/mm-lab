@@ -99,7 +99,7 @@ python Cluster03-Audio-Processing/audio_processing.py outputs/stereo_16bit.wav -
 
 ## Voice transformer (web MVP)
 
-[`voice-transformer/`](voice-transformer/README.md) is a separate Next.js application: an **AI speech-to-speech voice transformer**. Record or upload up to 30 seconds of speech, pick a synthetic target voice, and hear the same performance (words, timing, emotion) rendered in that voice via ElevenLabs Speech-to-Speech, then download the MP3. It is a non-commercial prototype on the ElevenLabs free plan — see its README for setup, [docs/ARCHITECTURE.md](voice-transformer/docs/ARCHITECTURE.md) and [docs/ROADMAP.md](voice-transformer/docs/ROADMAP.md).
+[`voice-transformer/`](voice-transformer/README.md) is a separate Next.js application: an **AI speech-to-speech voice transformer**. Record or upload up to 30 seconds of speech, pick a synthetic target voice, and hear the same performance (words, timing, emotion) rendered in that voice via ElevenLabs Speech-to-Speech, then download the MP3. Try it at [voice-transformer.vercel.app](https://voice-transformer.vercel.app). It is a non-commercial prototype on the ElevenLabs free plan — see its README for setup, [docs/ARCHITECTURE.md](voice-transformer/docs/ARCHITECTURE.md) and [docs/ROADMAP.md](voice-transformer/docs/ROADMAP.md).
 
 ```powershell
 cd voice-transformer

@@ -18,9 +18,10 @@ function loadEnv() {
     const path = resolve(process.cwd(), file);
     if (!existsSync(path)) continue;
     for (const line of readFileSync(path, "utf8").split(/\r?\n/)) {
-      const match = /^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/.exec(line);
+      const match = /^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$/.exec(line);
       if (!match || line.trim().startsWith("#")) continue;
-      env[match[1]] = match[2].replace(/^["']|["']$/g, "");
+      const value = match[2].replace(/\s+#.*$/, "").trim();
+      env[match[1]] = value.replace(/^(["'])(.*)$/, "$2");
     }
   }
   return env;

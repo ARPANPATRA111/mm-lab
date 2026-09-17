@@ -3,6 +3,8 @@
 Record or upload up to 30 seconds of speech and hear the **same performance** — words, timing, pauses, emphasis, emotion — rendered in a different synthetic AI voice. Optionally download the result as MP3.
 
 > **Status:** non-commercial technical prototype built on the ElevenLabs **free plan**. It is not a production SaaS. Commercial use requires an appropriate paid ElevenLabs plan and a review of their terms.
+>
+> **Live demo:** [voice-transformer.vercel.app](https://voice-transformer.vercel.app) — shares one free monthly quota, so please keep clips short.
 
 ## What this is (and isn't)
 
@@ -144,11 +146,13 @@ Every provider failure is logged server-side as `convert.provider_failed` with t
 
 ## Deployment (Vercel)
 
+The demo above is deployed with the Vercel CLI from this directory (`vercel link`, `vercel env add …`, `vercel deploy --prod`). For a Git-connected project:
+
 1. Push the repository and import it in Vercel. Set the **Root Directory** to `voice-transformer`.
 2. Add the environment variables above under *Settings → Environment Variables* (Production and Preview as needed). Never commit `.env.local`.
 3. Set `MAX_AUDIO_SIZE_MB=4`: Vercel serverless functions reject request bodies over 4.5 MB before the route runs. Uncompressed 30-second WAV files can exceed this; recordings made in the browser (WebM/Opus, a few hundred KB) are unaffected.
 4. Deploy. The `/api/convert` route runs on the Node.js runtime with `maxDuration = 60`. The page is rendered dynamically so configuration changes take effect on the next request after a redeploy.
-5. Redeploy after changing environment variables.
+5. Redeploy after changing environment variables. When adding values with the CLI, pass the bare ID — inline `# comments` are fine in `.env.local` (Next strips them) but would be stored verbatim by `vercel env add`.
 
 Any Node.js host that can run `next build && next start` works as well.
 
