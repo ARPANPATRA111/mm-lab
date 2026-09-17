@@ -21,7 +21,7 @@ function loadEnv() {
       const match = /^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$/.exec(line);
       if (!match || line.trim().startsWith("#")) continue;
       const value = match[2].replace(/\s+#.*$/, "").trim();
-      env[match[1]] = value.replace(/^(["'])(.*)$/, "$2");
+      env[match[1]] = value.replace(/^(["'])(.*)\1$/, "$2");
     }
   }
   return env;
