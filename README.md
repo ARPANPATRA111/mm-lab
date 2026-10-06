@@ -4,130 +4,71 @@
 
 **Explore the data behind every image, sound and frame.**
 
-Python experiments in metadata analysis and multimedia processing.
+**Arpan Patra** · Image · Audio · Video · OCR · AI voice
 
-**Arpan Patra** · Image · Audio · Video
-
-[**Open the browser demo ↗**](https://multimedia-laboratory-nu.vercel.app) · [Explore the datasets](datasets/README.md) · [Frontend source](https://github.com/ARPANPATRA111/mm-lab/tree/frontend/astro-metadata-lab/frontend)
+[**Open the browser demo ↗**](https://multimedia-laboratory-nu.vercel.app) · [Datasets](datasets/README.md) · [Frontend source](https://github.com/ARPANPATRA111/mm-lab/tree/frontend/astro-metadata-lab/frontend)
 
 </div>
 
 ---
 
-## What this project does
+## What's inside
 
-Give the analyzer an image, audio or video file. It identifies the media type, displays readable metadata and can save the result as JSON. Each lab cluster also includes a standalone processing program.
-
-| Lab | Metadata | Processing |
+| Project | What it does | Folder |
 | --- | --- | --- |
-| **Image** | Format, size, dimensions, colour mode, DPI and EXIF | Grayscale, half-size resize, threshold, blur, Canny edges, clockwise rotation |
-| **Audio** | Format, duration, codec, channels, sample rate, bit depth/bitrate and tags | Stereo to mono, peak normalization, reverse |
-| **Video** | Container, duration, resolution, FPS, frame count, codec and audio streams | Grayscale, half-size resize, thumbnail, frames, trim, reverse |
+| **Media analyzer** | Point it at any image, audio or video file and it shows the metadata (size, codec, duration, EXIF, GPS ...) | `main.py` |
+| **Image lab** | Image metadata + grayscale, resize, threshold, blur, edges, rotate | `Cluster02-Image-Processing/` |
+| **Audio lab** | Audio metadata + stereo-to-mono, normalise, reverse | `Cluster03-Audio-Processing/` |
+| **Video lab** | Video metadata + grayscale, resize, thumbnail, frames, trim, reverse | `Cluster04-Video-Processing/` |
+| **Task Pipe** | Fixes blurry, dark, rotated or skewed photos, then reads the text in 10+ languages (Hindi, Arabic, Chinese, ...) | [`Cluster05-Task-Pipe/`](Cluster05-Task-Pipe/README.md) |
+| **Voice transformer** | Web app: record your voice and hear it in another AI voice | [`voice-transformer/`](voice-transformer/README.md) |
 
-## Quick start
+## Setup (once)
 
-**Requirements:** Python 3.10+, Pillow, NumPy, OpenCV and [FFmpeg](https://ffmpeg.org/download.html). Install FFmpeg separately and make sure `ffprobe -version` works in your terminal.
+You need Python 3.10+ and [FFmpeg](https://ffmpeg.org/download.html) (check with `ffprobe -version`).
 
-```powershell
+```bash
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+# Windows:      .\.venv\Scripts\Activate.ps1
+# macOS/Linux:  source .venv/bin/activate
 python -m pip install -r requirements.txt
+```
 
+## Run it
+
+Each run writes to a **new** folder under `outputs/`; existing results are never overwritten.
+
+```bash
+# Media analyzer: any image, audio or video file (add --json report.json to save)
 python main.py datasets/images/camera_canon_40d.jpg
-```
+python main.py datasets/video/h264_aac_720p.mp4
 
-On macOS/Linux, activate with `source .venv/bin/activate`. On Windows, you can use `.\.venv\Scripts\python.exe` directly if activation is unavailable.
-
-### Analyze any media file
-
-```powershell
-python main.py datasets/audio/tagged_128k.mp3
-python main.py datasets/video/h264_aac_720p.mp4 --json outputs/video-report.json
-```
-
-Example video report, abbreviated:
-
-```text
-Media type: video
-Container: MP4 / QuickTime
-Duration (seconds): 6.0
-Width: 1280
-Height: 720
-Frame rate (fps): 30.0
-Frame count: 180
-Codec: h264
-```
-
-Reports also include file size, available tags and audio-stream details. Missing fields display as `Not available`; JSON uses `null`. Every metadata command supports `--json PATH` and `--help`.
-
-### Run a lab individually
-
-```powershell
-python Cluster02-Image-Processing/image_metadata.py datasets/images/gps_dscn0010.jpg
-python Cluster03-Audio-Processing/audio_metadata.py datasets/audio/stereo_48k_24bit.wav
-python Cluster04-Video-Processing/video_metadata.py datasets/video/multistream_h264.mkv
-```
-
-## Try the processing experiments
-
-Each command runs every operation for its media type. Use a **new output directory** for each run; existing files and directories are protected from overwrite.
-
-```powershell
+# Image / audio / video labs
 python Cluster02-Image-Processing/image_processing.py datasets/images/camera_canon_40d.jpg --output-dir outputs/images
 python Cluster03-Audio-Processing/audio_processing.py datasets/audio/mono_44k_16bit.wav --output-dir outputs/audio
 python Cluster04-Video-Processing/video_processing.py datasets/video/h264_aac_720p.mp4 --output-dir outputs/video --start 1 --duration 2
+
+# Task Pipe: enhance images and read their text (opens a results page in the browser)
+python Cluster05-Task-Pipe/task_pipe.py datasets/task-pipe/real/ --output-dir outputs/ocr --open
 ```
 
-| Output | What to expect |
-| --- | --- |
-| **Images → PNG** | Six images; the sample resizes to 50 × 34 and rotates to 68 × 100 |
-| **Audio → WAV** | `mono.wav`, `normalized.wav`, `reversed.wav`; sample rate and duration preserved |
-| **Video → AVI + PNG** | Four videos, a thumbnail and about one frame per second; the example trim lasts 2 seconds |
+The voice transformer is a separate Next.js app (`cd voice-transformer`, `pnpm install`, `pnpm dev`). It needs an ElevenLabs API key; see [its README](voice-transformer/README.md). Try it live at [voice-transformer.vercel.app](https://voice-transformer.vercel.app).
 
-<details>
-<summary><strong>Demonstrate stereo-to-mono with the stereo dataset</strong></summary>
-
-The stereo sample is 24-bit. Convert a separate copy to 16-bit before processing:
-
-```powershell
-New-Item -ItemType Directory -Force outputs
-ffmpeg -n -i datasets/audio/stereo_48k_24bit.wav -c:a pcm_s16le outputs/stereo_16bit.wav
-python Cluster03-Audio-Processing/audio_processing.py outputs/stereo_16bit.wav --output-dir outputs/stereo
-```
-
-</details>
-
-## Voice transformer (web MVP)
-
-[`voice-transformer/`](voice-transformer/README.md) is a separate Next.js application: an **AI speech-to-speech voice transformer**. Record or upload up to 30 seconds of speech, pick a synthetic target voice, and hear the same performance (words, timing, emotion) rendered in that voice via ElevenLabs Speech-to-Speech, then download the MP3. Try it at [voice-transformer.vercel.app](https://voice-transformer.vercel.app). It is a non-commercial prototype on the ElevenLabs free plan — see its README for setup, [docs/ARCHITECTURE.md](voice-transformer/docs/ARCHITECTURE.md) and [docs/ROADMAP.md](voice-transformer/docs/ROADMAP.md).
-
-```powershell
-cd voice-transformer
-pnpm install
-Copy-Item .env.example .env.local   # add your ElevenLabs key + voice IDs
-pnpm dev
-```
-
-## Project layout
+## Task Pipe in one minute
 
 ```text
-mm-lab/
-├── main.py                         # Consolidated analyzer
-├── multimedia/                     # Shared validation, metadata and reports
-├── Cluster02-Image-Processing/      # Image metadata + processing
-├── Cluster03-Audio-Processing/      # Audio metadata + processing
-├── Cluster04-Video-Processing/      # Video metadata + processing
-├── datasets/                       # 25 sample media files + provenance
-├── voice-transformer/              # Next.js AI speech-to-speech voice transformer (web MVP)
-├── requirements.txt
-└── README.md
+damaged photo -> measure problems -> fix (exposure, contrast, noise, shadows, blur)
+              -> fix geometry (rotate, straighten, flatten) -> find text lines
+              -> read each line with the right language model -> text + report + results.html
 ```
 
-## Formats and practical notes
+- Plain OCR gets 44% of characters wrong on the [171-image test set](datasets/task-pipe/README.md); Task Pipe gets 0.5%.
+- It runs offline on the CPU in about 3–4 s per image, and a spinner shows progress while it works.
+- If Hindi or Arabic looks broken in your terminal, open the `results.html` it writes. The browser shows every script correctly.
 
-- **Images:** JPEG, PNG, GIF, BMP, TIFF and WebP. HEIC needs an additional Pillow decoder. Processing uses the first frame/page, applies EXIF orientation and saves RGB/grayscale PNGs without original metadata or transparency.
-- **Audio:** PCM WAV, MP3, FLAC, OGG, M4A/AAC and Opus, subject to FFprobe support. Processing accepts **mono/stereo 16-bit PCM WAV** and holds the samples in memory. Images and PCM WAV metadata work without FFprobe; WAV tags require it.
-- **Video:** MP4, MOV, AVI, MKV, WebM and MPEG/OGV, subject to codec support. **Generated MJPEG AVI videos are silent** and use constant FPS. Source dimensions must be even; half-size dimensions round down to even values. Reversal uses temporary disk space, about 475 MiB for the 720p sample.
-- **Reports:** Some frame counts are estimates and are marked accordingly. Metadata probing does not guarantee that every compressed frame is intact. Failed processing can leave partial outputs; rerun into a new directory.
+## Notes
 
-Generated files stay under `outputs/`, which Git ignores. Sample sources and attribution are documented in [datasets/README.md](datasets/README.md).
+- **Images:** JPEG, PNG, GIF, BMP, TIFF, WebP. HEIC needs an extra Pillow plugin.
+- **Audio processing** takes 16-bit PCM WAV. Compressed audio and video metadata need FFprobe.
+- **Generated video** is silent MJPEG AVI.
+- **Sample files** and their sources are in [`datasets/`](datasets/README.md).
